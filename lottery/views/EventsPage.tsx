@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Button } from "react-native";
 
 import { theme } from "../theme.config.json";
 
@@ -89,11 +89,17 @@ function EventsPage() {
       type: "function",
     },
   ];
-
-  const [lotteryContract, setlotteryContract] = useState<any>(null);
-
   const provider = new JsonRpcProvider("https://rpc.sepolia.org");
   const contract = new Contract(contractAddress, contractABI, provider);
+
+  const handleBuyTicket = async () => {
+    const data = await contract.enter();
+    console.log(data);
+    const players = await contract.getPlayers();
+    console.log(players);
+  };
+
+  const [lotteryContract, setlotteryContract] = useState<any>(null);
 
   const data = contract.getOwner().then((data) => console.log(data));
 
@@ -105,6 +111,7 @@ function EventsPage() {
       }}
     >
       <Text>This is an event page</Text>
+      <Button title="Acheter un ticket" onPress={handleBuyTicket}></Button>
     </View>
   );
 }
