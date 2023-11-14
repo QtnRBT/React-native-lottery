@@ -1,55 +1,52 @@
-import { StyleSheet } from "react-native";
-
-import { ethers } from "ethers";
-
-import {
-  WalletConnectModal,
-  useWalletConnectModal,
-} from "@walletconnect/modal-react-native";
+import "@walletconnect/react-native-compat";
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import MainBottomTabs from "./components/MainBottomTabs";
 import LoginScreen from "./views/LoginScreen";
 
-const projectId = "439a5979994e336a7919f88235b11ce3";
+import { Balance } from "./Balance";
 
-const providerMetadata = {
-  name: "Letho",
-  description: "An app for a lottery",
-  url: "https://your-project-website.com/",
-  icons: ["https://your-project-logo.com/"],
-  redirect: {
-    native: "YOUR_APP_SCHEME://",
-    universal: "YOUR_APP_UNIVERSAL_LINK.com",
-  },
-};
+import { Text } from "react-native";
+
+import { sepolia } from "viem/chains";
+import {
+  defaultWagmiConfig,
+  createWeb3Modal,
+} from "@web3modal/wagmi-react-native";
+import { WagmiConfig } from "wagmi";
+import { Web3Modal } from "@web3modal/wagmi-react-native/";
 
 export default function App() {
-  // Add in the useWalletConnectModal hook + props
-  const { isConnected } = useWalletConnectModal();
+  // 1. Get projectId
+  const projectId = "439a5979994e336a7919f88235b11ce3";
 
+  // 2. Create config
+  const metadata = {
+    name: "Web3Modal RN",
+    description: "Web3Modal RN Example",
+    url: "https://web3modal.com",
+    icons: ["https://avatars.githubusercontent.com/u/37784886"],
+    redirect: {
+      native: "YOUR_APP_SCHEME://",
+      universal: "YOUR_APP_UNIVERSAL_LINK.com",
+    },
+  };
+
+  const chains = [sepolia];
+
+  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+
+  // 3. Create modal
+  createWeb3Modal({
+    projectId,
+    chains,
+    wagmiConfig,
+  });
   // Main UI Render
   return (
-    <NavigationContainer>
-      <WalletConnectModal {...{ projectId, providerMetadata }} />
-      {isConnected ? <MainBottomTabs /> : <LoginScreen />}
-    </NavigationContainer>
+    <WagmiConfig config={wagmiConfig}>
+      <Balance></Balance>
+      <Web3Modal />
+    </WagmiConfig>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  pressableMargin: {
-    marginTop: 16,
-  },
-});
