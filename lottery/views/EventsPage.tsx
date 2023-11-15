@@ -1,141 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import React from 'react';
+import { Button, Text, View } from 'react-native';
 
-import { theme } from "../theme.config.json";
+import {
+  useAccount,
+  useContractRead,
+  usePrepareContractWrite,
+  useContractWrite,
+  useWalletClient,
+} from 'wagmi';
+import abi from '../abi.json';
 
-import { Contract, BaseContract, AlchemyProvider } from "ethers";
-import { useWalletConnect } from "@walletconnect/react-native-dapp";
+import { theme } from '../theme.config.json';
+import { ethers } from 'ethers';
 
 function EventsPage() {
-  // const [baseContract, setBaseContract] = useState<BaseContract | null>(null);
+  const account = useAccount();
 
-  // useEffect(() => {
-  //   const handleConnection = async () => {
-  //     const connector = useWalletConnect();
+  const { data } = useContractRead({
+    abi: abi,
+    address: `0x4d4d7AbBf568173fdd5D76dCD2Bd4d4af0d06a0f`,
+    functionName: 'getLotteryId',
+    account: account.address,
+  });
 
-  //     if (!connector.connected) {
-  //       await connector.connect();
-  //     }
+  const preparedContract = usePrepareContractWrite({
+    address: '0x4d4d7AbBf568173fdd5D76dCD2Bd4d4af0d06a0f',
+    abi: abi,
+    functionName: 'enter',
+    account: account.address,
+    value: ethers.parseEther('0.01'),
+    onSuccess: (data) => {
+      console.log(data.result);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
-  //     const provider = new AlchemyProvider(connector);
-  //     const signer = await provider.getSigner();
+  const { write } = useContractWrite(preparedContract.config);
 
-  //     const contractAddress = "0x05f37fd91676a73c6d02f7E6d13286EEE9f51b80";
-  //     const contractABI = [
-  //       { inputs: [], stateMutability: "nonpayable", type: "constructor" },
-  //       {
-  //         inputs: [],
-  //         name: "enter",
-  //         outputs: [],
-  //         stateMutability: "payable",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "getOwner",
-  //         outputs: [{ internalType: "address", name: "", type: "address" }],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "getPlayers",
-  //         outputs: [
-  //           { internalType: "address payable[]", name: "", type: "address[]" },
-  //         ],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "getPotBalance",
-  //         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "getRandomNumber",
-  //         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [
-  //           { internalType: "uint256", name: "lottery", type: "uint256" },
-  //         ],
-  //         name: "getWinnerByLottery",
-  //         outputs: [
-  //           { internalType: "address payable", name: "", type: "address" },
-  //         ],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-  //         name: "lotteryHistory",
-  //         outputs: [
-  //           { internalType: "address payable", name: "", type: "address" },
-  //         ],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "lotteryId",
-  //         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "owner",
-  //         outputs: [
-  //           { internalType: "address payable", name: "", type: "address" },
-  //         ],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "pickWinner",
-  //         outputs: [],
-  //         stateMutability: "payable",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-  //         name: "players",
-  //         outputs: [
-  //           { internalType: "address payable", name: "", type: "address" },
-  //         ],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //     ];
-  //     const contract = new Contract(contractAddress, contractABI, signer);
-  //     setBaseContract(contract);
-  //     console.log(contract);
-  //   };
-
-  //   handleConnection();
-  // }, []);
-
-  // const handleGetOwner = () => {
-  //   contract.getOwner().then((data) => console.log(data));
-  // };
-
-  const handleEnter = async () => {};
-
-  // console.log(contract);
   return (
     <View
       style={{
         paddingHorizontal: Number(theme.spacing.paddingHorizontal),
       }}
     >
-      <Text>This is an event page</Text>
-      {/* <Button title="Get owner" onPress={handleGetOwner}></Button> */}
+      <Text
+        style={{
+          fontSize: 30,
+        }}
+      >
+        Lotterie N°{Number(data)}
+      </Text>
+      <Button title='Acheter un ticket' onPress={write}></Button>
     </View>
   );
 }
