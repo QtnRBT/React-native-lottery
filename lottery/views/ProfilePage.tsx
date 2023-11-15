@@ -48,9 +48,6 @@ function ProfilePage() {
   const { write: pickWinner } = useContractWrite(pickWinnerPreparation.config);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      console.log('focus');
-    })
     if (data === undefined) return;
     setParticipants(data as String[]);
 
