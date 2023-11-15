@@ -1,4 +1,6 @@
 import React from "react";
+import Card from "../components/GiftCard.tsx";
+import LastCard from "../components/LastGiftCard.tsx";
 
 import {
   Text,
@@ -22,6 +24,18 @@ function GiftListPage() {
       }}
     >
       <View></View>
+      <Text style={{
+        fontSize: 35,
+        marginHorizontal: 20,
+      }}>À récupérer</Text>
+      <LastCard title="Reception" content="20 Juillet         Mairie" title2="Produit" content2="Produit" imageSource={require("../assets/Letho.png")} />
+      <Text style={{
+        alignSelf: 'center',
+        fontSize: 35,
+      }}>Dernier Cadeaux </Text>
+      <Card title="   Dates                 Produit" content="     il y a 37 jours                   Produit" imageSource={require("../assets/Letho.png")} />
+      <Card title="   Dates                 Produit" content="     il y a 37 jours                   Produit" imageSource={require("../assets/Letho.png")} />
+      <Card title="   Dates                 Produit" content="     il y a 37 jours                   Produit" imageSource={require("../assets/Letho.png")} />
       <View
         style={{
           flexDirection: "column",
@@ -29,10 +43,6 @@ function GiftListPage() {
           justifyContent: "center",
         }}
       >
-      <Image source={require("../assets/Gifts.png")} style={{
-            width: 400,
-            height: 600,
-          }}></Image>
       </View>
     </SafeAreaView>
   );
