@@ -1,0 +1,14 @@
+{
+  "theme": {
+    "colors": {
+      "primary": "#9381FF"
+    },
+    "spacing": {
+      "paddingVerticalHeader": "40",
+      "paddingHorizontal": "10"
+    },
+    "sizing": {
+      "text-xl": "40"
+    }
+  }
+}
