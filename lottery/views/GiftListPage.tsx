@@ -1,17 +1,40 @@
 import React from "react";
-import { Text, View } from "react-native";
+
+import {
+  Text,
+  Image,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
 import { theme } from "../theme.config.json";
 
 function GiftListPage() {
   return (
-    <View
+    <SafeAreaView
       style={{
         paddingHorizontal: Number(theme.spacing.paddingHorizontal),
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+        paddingVertical: Number(theme.spacing.paddingVerticalHeader),
       }}
     >
-      <Text>This is a gift page</Text>
-    </View>
+      <View></View>
+      <View
+        style={{
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+      <Image source={require("../assets/Gifts.png")} style={{
+            width: 400,
+            height: 600,
+          }}></Image>
+      </View>
+    </SafeAreaView>
   );
 }
 
